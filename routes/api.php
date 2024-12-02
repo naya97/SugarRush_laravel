@@ -50,5 +50,6 @@ Route::group([
 
 ], function() {
     Route::post('addToFavourite',[FavouriteController::class,'addToFvourite']);
-    Route::delete('removeFromFavourite',[FavouriteController::class,'removeFromFavourite']);
+    Route::delete('removeFavourite',[FavouriteController::class,'removeFavourite']);
+    Route::get('showFav',[FavouriteController::class,'showFav']);
 });
