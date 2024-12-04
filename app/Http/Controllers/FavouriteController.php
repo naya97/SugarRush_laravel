@@ -44,6 +44,7 @@ class FavouriteController extends Controller
     }
 
     public function showFav() {
+
         $user = Auth::user();
         if(!$user) {
             return response()->json(['message' => 'you have to login/signup again']);
@@ -51,6 +52,19 @@ class FavouriteController extends Controller
         $favs = Favorite::where('user_id', $user->id)->pluck('product_id')->all();
         $products  = Product::whereIn('id',$favs)->get();
 
-        return response()->json($products,200);     
+        $response = [];
+        foreach($products as $product) {
+            $response [] = [
+                'id' => $product->id ,
+                'name' => $product->name ,
+                'description' => $product->description ,
+                'image' =>  $product->image,
+                'price' =>  $product->price,
+                'totalQuantity' =>  $product->totalQuantity,
+                'shop_id' =>  $product->shop_id,
+            ];
+        }
+
+        return response()->json($response,200);     
     }
 }

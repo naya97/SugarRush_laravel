@@ -55,8 +55,19 @@ class ShopController extends Controller
         if($results->isEmpty()) {
             return response()->json(['message' => 'Not Found']);
         }
+
+        $response = [];
+        foreach($results as $result) {
+            $response [] = [
+                'id' => $result->id ,
+                'name' => $result->name ,
+                'description' => $result->description ,
+                'location' => $result->location ,
+                'image' =>  $result->image,
+            ];
+        }
         
-        return response()->json($results,200);
+        return response()->json($response,200);
             
     }
 }

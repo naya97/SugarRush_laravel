@@ -24,7 +24,21 @@ class ProductController extends Controller
 
         $products = Shop::find($request->id)->products;
 
-        return response()->json($products,200);
+        $response = [];
+        foreach($products as $product)
+        {
+            $response [] = [
+                'id' => $product->id ,
+                'name' => $product->name ,
+                'description' => $product->description ,
+                'image' =>  $product->image,
+                'price' =>  $product->price,
+                'totalQuantity' =>  $product->totalQuantity,
+                'shop_id' =>  $product->shop_id,
+            ];
+        }
+
+        return response()->json($response,200);
     }
 
     public function isFav($user,$id) {
@@ -65,7 +79,21 @@ class ProductController extends Controller
                 'message' => 'not found'
             ]);                
         }
-        return response()->json($results,200);
 
+        $response = [];
+        foreach($results as $result) {
+            $response [] = [
+                'id' => $result->id ,
+                'name' => $result->name ,
+                'description' => $result->description ,
+                'image' =>  $result->image,
+                'price' =>  $result->price,
+                'totalQuantity' =>  $result->totalQuantity,
+                'shop_id' =>  $result->shop_id,
+            ];
+        }
+
+        return response()->json($response,200);
+        
     }
 }
