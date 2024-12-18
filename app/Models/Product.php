@@ -26,4 +26,8 @@ class Product extends Model
     public function favourites() : HasMany {
         return $this->hasMany(Favorite::class);
     }
+
+    public function productDetails() : HasMany {
+        return $this->hasMany(ProductDetails::class);
+    }
 }

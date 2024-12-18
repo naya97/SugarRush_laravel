@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FavouriteController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShopController;
 use Illuminate\Http\Request;
@@ -52,4 +54,28 @@ Route::group([
     Route::post('addToFavourite',[FavouriteController::class,'addToFvourite']);
     Route::delete('removeFavourite',[FavouriteController::class,'removeFavourite']);
     Route::get('showFav',[FavouriteController::class,'showFav']);
+});
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'order'
+
+], function() {
+    Route::post('makeOrder',[OrderController::class,'makeOrder']);
+    Route::post('addToCart',[OrderController::class,'addToCart']);
+    Route::get('showCart',[OrderController::class,'showCart']);
+    Route::post('editCart',[OrderController::class,'editCart']);
+    Route::delete('removeFromCart',[OrderController::class,'removeFromCart']);
+    Route::post('order',[OrderController::class,'order']);
+    Route::get('showOrders',[OrderController::class,'showOrders']);
+    Route::get('showOrderDetails',[OrderController::class,'showOrderDetails']);
+});
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'address'
+
+], function() {
+    Route::get('showParentRegion',[AddressController::class,'showParentRegion']);
+    Route::get('showChildRegion',[AddressController::class,'showChildRegion']);
 });
