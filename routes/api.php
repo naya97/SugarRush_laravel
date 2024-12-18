@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FavouriteController;
 use App\Http\Controllers\OrderController;
@@ -78,4 +79,13 @@ Route::group([
 ], function() {
     Route::get('showParentRegion',[AddressController::class,'showParentRegion']);
     Route::get('showChildRegion',[AddressController::class,'showChildRegion']);
+});
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'admin'
+
+], function() {
+    Route::post('addShop',[AdminController::class,'addShop']);
+    Route::post('addProduct',[AdminController::class,'addProduct']);
 });

@@ -28,8 +28,9 @@ class AuthController extends Controller
         $Token = $this->createNewToken($token);
         return response()->json([
             'message'=>'User successfully loggedin',
-            'token' =>$Token,
-    ]);
+            'role' => Auth::user()->role,
+            'token' => $Token,
+        ]);
     }
 
     /* Register a User.
