@@ -36,7 +36,7 @@ class AdminController extends Controller
         $shop = Shop::create([
             'name' => $request->name,
             'description' => $request->description,
-            'image' => ('/storage/images/shops'.$originalName),
+            'image' => ('/storage/images/shops/'.$originalName),
             'location' => $request->location,
         ]);
 
@@ -71,7 +71,7 @@ class AdminController extends Controller
             'shop_id' => $request->shop_id,
             'name' => $request->name,
             'description' => $request->description,
-            'image' => ('/storage/images/products'.$originalName),
+            'image' => ('/storage/images/products/'.$originalName),
             'price'=>$request->price,
             'totalQuantity'=>$request->totalQuantity,
         ]);

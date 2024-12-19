@@ -56,6 +56,11 @@ class OrderController extends Controller
         if($request->quantity >$product->totalQuantity){
             return response()->json('Quantity not available',400);
         }
+        
+        $product->update([
+            'totalQuantity'=>($product->totalQuantity) -($request->quantity),
+        ]);
+
         $productPrice = $product->price;
         $price =( $request->quantity) * $productPrice;
         $productDetails = ProductDetails::create([
@@ -101,9 +106,14 @@ class OrderController extends Controller
             return response()->json(['message' => 'you have to login/signup again']);
         }
         $order = Order::where('user_id',$user->id)->where('cart',true)->first();
-        $product = ProductDetails::where('order_id',$order->id)->where('product_id',$request->product_id);
+        $productDetails = ProductDetails::where('order_id',$order->id)->where('product_id',$request->product_id)->first();
+        $product = Product::where('id',$request->product_id)->first();
+        $product->update([
+            'totalQuantity'=>($product->totalQuantity) +($productDetails->quantity),
+        ]);
 
-        $product->delete();
+        $productDetails->delete();
+       
 
         return response()->json('removed successfully',200);
     }
@@ -122,11 +132,17 @@ class OrderController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
         $order = Order::where('user_id',$user->id)->where('cart',true)->first();
-        $productDetails = ProductDetails::where('order_id',$order->id)->where('product_id',$request->product_id);
+        $productDetails = ProductDetails::where('order_id',$order->id)->where('product_id',$request->product_id)->first();
         $product = Product::find($request->product_id);
         if($request->quantity >$product->totalQuantity){
             return response()->json('Quantity not available',400);
         }
+
+        $newQuantity =  ($request->quantity) - ($productDetails->quantity);
+        $product->update([
+            'totalQuantity' => ($product->totalQuantity) - ($newQuantity)
+        ]);
+
         $productPrice = $product->price;
         $newPrice =( $request->quantity) * $productPrice;
         $productDetails->update([
@@ -185,15 +201,17 @@ class OrderController extends Controller
             'totalPrice'=>$totalPrice,
             'bankAccount'=>$request->bankAccount,
         ]);
-        $productsDetailsIds = $productsDetails->pluck('product_id')->all();
-        $products = Product::whereIn('id',$productsDetailsIds)->get();
-        $productsTotalQuantity = $products->pluck('totalQuantity')->all();
-        $size = count($products);
-        for($i=0;$i<$size;$i++) {
-           $products[$i]->update([
-                'totalQuantity' => ($productsTotalQuantity[$i]) - ($productsDetails[$i]->quantity)
-           ]);
-        }
+
+        // $productsDetailsIds = $productsDetails->pluck('product_id')->all();
+        // $products = Product::whereIn('id',$productsDetailsIds)->get();
+        // $productsTotalQuantity = $products->pluck('totalQuantity')->all();
+        // $size = count($products);
+        // for($i=0;$i<$size;$i++) {
+        //    $products[$i]->update([
+        //         'totalQuantity' => ($productsTotalQuantity[$i]) - ($productsDetails[$i]->quantity)
+        //    ]);
+        // }
+
         return response()->json($order,200);
     }
 
