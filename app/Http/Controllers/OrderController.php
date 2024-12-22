@@ -6,6 +6,7 @@ use App\Models\Address;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductDetails;
+use App\Notifications\OrderStatusNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -232,6 +233,7 @@ class OrderController extends Controller
                 'address'=>$childRegion->region,
                 'orderLocation' => $order->orderLocation ,
                 'totalPrice' => $order->totalPrice ,
+                'status' => $order->status
             ];
             
         }
@@ -261,6 +263,45 @@ class OrderController extends Controller
             ];
         }
         return response()->json($response,200);
+
+    }
+
+    public function showOrder(Request $request) {
+        $user = Auth::user();
+        if(!$user) {
+
+            return response()->json(['message' => 'you have to login/signup again']);
+        }
+
+        $order = Order::where('id',$request->order_id)->first();
+
+        return response()->json($order,200);
+    }
+
+    public function cancelOrder(Request $request) {
+        $user = Auth::user();
+        if(!$user) {
+
+            return response()->json(['message' => 'you have to login/signup again']);
+        }
+
+        $order = Order::where('id',$request->order_id)->where('status','pending')->first();
+
+        if(!$order) {
+            return response()->json('not allowed',400);
+        }
+
+        $order->status = 'canceled';
+        $order->cart = true;
+        $order->address_id = null;
+        $order->orderLocation = 'null';
+        $order->orderPrice = 0;
+        $order->deliveryPrice = 0;
+        $order->totalPrice = 0;
+        $order->bankAccount = 'null';
+        $order->save();
+        
+        return response()->json('order canceled',200);
 
     }
 }

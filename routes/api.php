@@ -4,6 +4,7 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FavouriteController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShopController;
@@ -70,6 +71,7 @@ Route::group([
     Route::post('order',[OrderController::class,'order']);
     Route::get('showOrders',[OrderController::class,'showOrders']);
     Route::get('showOrderDetails',[OrderController::class,'showOrderDetails']);
+    Route::post('cancelOrder',[OrderController::class,'cancelOrder']);
 });
 
 Route::group([
@@ -88,4 +90,17 @@ Route::group([
 ], function() {
     Route::post('addShop',[AdminController::class,'addShop']);
     Route::post('addProduct',[AdminController::class,'addProduct']);
+    Route::get('showOrders',[AdminController::class,'showOrders']);
+    Route::post('updateStatus',[AdminController::class,'updateStatus']);
+});
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'notification'
+
+], function() {
+    Route::get('showNotifications',[NotificationController::class,'showNotifications']);
+    Route::get('readNotifications',[NotificationController::class,'readNotifications']);
+    Route::get('unreadNotifications',[NotificationController::class,'unreadNotifications']);
+    Route::get('showOrder',[OrderController::class,'showOrder']);
 });

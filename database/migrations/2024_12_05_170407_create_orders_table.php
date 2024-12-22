@@ -21,6 +21,7 @@ return new class extends Migration
             $table->double('deliveryPrice')->default(0);
             $table->double('totalPrice')->default(0);
             $table->string('bankAccount')->default('null');
+            $table->string('status')->default('pending');
             $table->timestamps();
         });
     }
